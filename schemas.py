@@ -1,5 +1,6 @@
 from typing import Optional
 from sqlmodel import SQLModel
+from datetime import datetime
 
 class UserCreate(SQLModel):
     name: str
@@ -63,5 +64,24 @@ class ServiceUpdate(SQLModel):
     price: Optional[float] = None
     duration: Optional[int] = None
 
-class AppointmentsCreate(SQLModel):
-    
+
+class AppointmentCreate(SQLModel):
+    date_time: datetime
+    user_id: int
+    master_id: int
+    service_id: int
+
+class AppointmentRead(SQLModel):
+    id: int
+    date_time: datetime
+    status: str
+    user_id: int
+    master_id: int
+    service_id: int
+
+class AppointmentUpdate(SQLModel):
+    date_time: Optional[datetime] = None
+    status: Optional[str] = None
+    user_id: Optional[int] = None
+    master_id: Optional[int] = None
+    service_id: Optional[int] = None
