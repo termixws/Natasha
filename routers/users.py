@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 from models import User
 from schemas import UserCreate, UserRead, UserUpdate
 from database import get_db
-from passlib.context import CryptContext
+from auth import get_password_hash, verify_password
 
 app = APIRouter(prefix="/users", tags=["Users"])
 
@@ -13,12 +13,14 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user = db.exec(select(User).where(User.email == user.email)).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
+    
+    hashed_password = get_password_hash(user.password)
 
     new_user = User(
         name=user.name,
         email=user.email,
         phone=user.phone,
-        hashed_password=user.password,
+        hashed_password=hashed_password,
     )
     db.add(new_user)
     db.commit()
